@@ -38,4 +38,16 @@ def recommend_movies(movie_name, n=5):
     scores = sorted(scores, key=lambda x: x[1], reverse=True)
 
     movie_indices = [i[0] for i in scores[1:n+1]]
-    return movies["title"].iloc[movie_indices].tolist()
+    return movies["title"].iloc[movie_indices].apply(remove_the).tolist()
+
+
+def remove_the(title):
+    # Handles: "Matrix, The (1999)"
+    if ", The" in title:
+        title = title.replace(", The", "")
+    # Handles: "The Matrix (1999)"
+    elif title.startswith("The "):
+        title = title.replace("The ", "", 1)
+    return title.strip()
+
+
